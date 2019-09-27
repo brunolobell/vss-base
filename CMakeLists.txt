@@ -10,10 +10,15 @@ include_directories("include"
                     "${CMAKE_SOURCE_DIR}/ext/json/nlhomann.cpp"
                     ${Boost_INCLUDE_DIRS})
 
-#[[set(SRCS
-"src/f180_serial_message.cc")]]
+set(SRCS
+    "src/io/serial_message.cc"
+    "src/io/serial_sender.cc")
+
+add_library(vss_software_srcs
+            ${SRCS})
 
 add_executable(vss_software "src/main.cpp")
 
 target_link_libraries(vss_software
+                    vss_software_srcs
                     ${Boost_LIBRARIES})
