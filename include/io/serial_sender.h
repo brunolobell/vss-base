@@ -1,4 +1,4 @@
-// Copyright FURGBot 2019
+// ® Copyright FURGBot 2019
 
 #ifndef SERIAL_SENDER_H
 #define SERIAL_SENDER_H

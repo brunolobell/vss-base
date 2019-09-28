@@ -1,4 +1,4 @@
-// Copyright FURGBot 2019
+// ® Copyright FURGBot 2019
 
 
 #ifndef SERIAL_MESSAGE_H

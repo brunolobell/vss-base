@@ -1,4 +1,4 @@
-// Copyright FURGBot 2019
+// ® Copyright FURGBot 2019
 
 #include "io/serial_sender.h"
 
