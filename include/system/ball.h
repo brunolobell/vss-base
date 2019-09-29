@@ -5,7 +5,7 @@
 #define BALL_H
 
 
-#include "CGAL/Simple_cartesian.h"
+#include "geometry/point_2d.h"
 
 #include <vector>
 
@@ -13,26 +13,26 @@
 namespace vss_furgbol {
 namespace system {
 
-typedef CGAL::Simple_cartesian<float>::Point_2 point_2d;
-
 class Ball {
     private:
-        point_2d position_;
+        geometry::Point2D position_;
         std::vector<float> movimentation_;
 
     public:
         Ball();
+        Ball(geometry::Point2D position, std::vector<float> movimentation);
         ~Ball();
 
         //Getters
-        point_2d getPosition();
+        geometry::Point2D getPosition();
         std::vector<float> getMovimentation();
 
         //Setters
-        void setPosition(point_2d position);
+        void setPosition(geometry::Point2D position);
         void setMovimentation(std::vector<float> movimentation);
 
-        void operator=(Ball ball);
+        //Operators
+        Ball operator=(Ball ball);
 };
 
 }

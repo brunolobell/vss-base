@@ -27,21 +27,24 @@ enum TeamLabels {
 
 class System {
     private:
+        //World Model
         Ball ball_;
         std::vector<Robot> friendly_robots_;
         std::vector<Robot> enemy_robots_;
 
+        //TCP Networking
         //io::TCPReceiver tcp_receiver_;
 
+        //Serial Networking
         int serial_package_id_;
         std::chrono::duration<float> serial_sending_frequency_;
-        io::SerialSender *serial_sender_;
-        io::SerialMessage serial_message_;
-        std::vector<uint8_t> buffer_to_send_;
-
         std::string serial_port_name_;
         int frequency_;
         float period_;
+        io::SerialSender *serial_sender_;
+        io::SerialMessage serial_message_;
+        std::vector<uint8_t> buffer_to_send_;
+        std::vector<std::vector<uint8_t>> sending_queue_;
 
     public:
         System();

@@ -10,28 +10,30 @@ namespace geometry {
 
 class FieldSection {
     private:
-        int min_x_;
-        int min_y_;
-        int max_x_;
-        int max_y_;
+        float min_x_;
+        float min_y_;
+        float max_x_;
+        float max_y_;
 
     public:
         FieldSection();
+        FieldSection(float min_x, float min_y, float max_x, float max_y);
         ~FieldSection();
 
         //Getters
-        int getMinX();
-        int getMinY();
-        int getMaxX();
-        int getMaxY();
+        float getMinX();
+        float getMinY();
+        float getMaxX();
+        float getMaxY();
 
         //Setters
-        void setMinX(int min_x);
-        void setMinY(int min_y);
-        void setMaxX(int max_x);
-        void setMaxY(int max_y);
+        void setMinX(float min_x);
+        void setMinY(float min_y);
+        void setMaxX(float max_x);
+        void setMaxY(float max_y);
 
-        void operator=(FieldSection field);
+        //Operators
+        FieldSection operator=(FieldSection field);
 };
 
 } // namespace geometry

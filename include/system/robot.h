@@ -6,16 +6,13 @@
 
 
 #include "geometry/field_section.h"
-
-#include "CGAL/Simple_cartesian.h"
+#include "geometry/point_2d.h"
 
 #include <vector>
 
 
 namespace vss_furgbol {
 namespace system {
-
-typedef CGAL::Simple_cartesian<float>::Point_2 point_2d;
 
 enum RoleLabel {
     GK, CB, ST, UNDEFINED //GoalKeeper, CenterBack, STriker, Undefined (for enemy robots)
@@ -27,12 +24,13 @@ class Robot {
         int role_;
         int max_velocity_;
         geometry::FieldSection field_section_;
-        point_2d position_;
-        point_2d target_;
+        geometry::Point2D position_;
+        geometry::Point2D target_;
         std::vector<float> movimentation_;
 
     public:
         Robot();
+        Robot(int id, int role, int max_velocity, geometry::FieldSection field_section, geometry::Point2D position, geometry::Point2D target, std::vector<float> movimentation);
         ~Robot();
 
         //Getters
@@ -40,8 +38,8 @@ class Robot {
         int getRole();
         int getMaxVelocity();
         geometry::FieldSection getFieldSecton();
-        point_2d getPosition();
-        point_2d getTarget();
+        geometry::Point2D getPosition();
+        geometry::Point2D getTarget();
         std::vector<float> getMovimentation();
 
         //Setters
@@ -49,11 +47,12 @@ class Robot {
         void setRole(int role);
         void setMaxVelocity(int max_velocity);
         void setFieldSection(geometry::FieldSection field_section);
-        void setPosition(point_2d position);
-        void setTarget(point_2d target);
+        void setPosition(geometry::Point2D position);
+        void setTarget(geometry::Point2D target);
         void setMovimentation(std::vector<float> movimentation);
 
-        void operator=(Robot robot);
+        //Operators
+        Robot operator=(Robot robot);
 };
 
 } // namespace system
