@@ -1,0 +1,18 @@
+{
+    "robots": {
+        "goalkeeper": {
+            "id": 1,
+            "max_velocity": 127
+        },
+
+        "centerback": {
+            "id": 2,
+            "max_velocity": 127
+        },
+
+        "striker": {
+            "id": 3,
+            "max_velocity": 127
+        }
+    }
+}

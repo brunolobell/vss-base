@@ -10,8 +10,11 @@
 #include "io/serial_sender.h"
 #include "io/serial_message.h"
 
+#include "json.hpp"
+
 #include <chrono>
 #include <string>
+#include <fstream>
 
 
 namespace vss_furgbol {
@@ -40,6 +43,8 @@ class System {
         ~System();
 
         void init();
+        void setConfigurations();
+        void setDefaults();
 
         //Getters
         Ball getBall();

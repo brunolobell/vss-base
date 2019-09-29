@@ -8,7 +8,7 @@ find_package(CGAL REQUIRED)
 
 include_directories("include"
                     "${CMAKE_SOURCE_DIR}/ext/RxCpp/Rx/v2/src"
-                    "${CMAKE_SOURCE_DIR}/ext/json/include"
+                    "${CMAKE_SOURCE_DIR}/lib"
                     ${Boost_INCLUDE_DIRS})
 
 set(SRCS

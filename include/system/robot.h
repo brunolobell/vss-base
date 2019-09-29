@@ -16,13 +16,14 @@ namespace system {
 typedef CGAL::Simple_cartesian<float>::Point_2 point_2d;
 
 enum RoleLabel {
-    GK, CB, ST //GoalKeeper, CenterBack, STriker
+    GK, CB, ST, UNDEFINED //GoalKeeper, CenterBack, STriker, Undefined (for enemy robots)
 };
 
 class Robot {
     private:
         int id_;
         int role_;
+        int max_velocity_;
         point_2d position_;
         point_2d target_;
         std::vector<float> movimentation_;
@@ -34,6 +35,7 @@ class Robot {
         //Getters
         int getId();
         int getRole();
+        int getMaxVelocity();
         point_2d getPosition();
         point_2d getTarget();
         std::vector<float> getMovimentation();
@@ -41,6 +43,7 @@ class Robot {
         //Setters
         void setId(int id);
         void setRole(int role);
+        void setMaxVelocity(int max_velocity);
         void setPosition(point_2d position);
         void setTarget(point_2d target);
         void setMovimentation(std::vector<float> movimentation);

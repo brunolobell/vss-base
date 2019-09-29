@@ -8,20 +8,47 @@ namespace vss_furgbol {
 namespace system {
 
 System::System() : serial_package_id_(0), serial_sending_frequency_(1), 
-                    buffer_to_send_(std::vector<uint8_t>(5, 0))
-{
-    friendly_robots_.push_back(Robot());
-    friendly_robots_.push_back(Robot());
-    friendly_robots_.push_back(Robot());
-
-    enemy_robots_.push_back(Robot());
-    enemy_robots_.push_back(Robot());
-    enemy_robots_.push_back(Robot());
-}
+                    buffer_to_send_(std::vector<uint8_t>(5, 0)) {}
 
 System::~System() {}
 
-void System::init() {}
+void System::init() {
+    setConfigurations();
+    setDefaults();
+}
+
+void System::setConfigurations() {
+    std::ifstream _ifstream("config/config.json");
+    nlohmann::json json_file;
+    _ifstream >> json_file;
+    setSerialSender(json_file["networking"]["serial"]["port"]);
+    setSerialSendingFrequency(json_file["networking"]["serial"]["sending_frequency"]);
+}
+
+void System::setDefaults() {
+    std::ifstream _ifstream("config/defaults.json");
+    nlohmann::json json_file;
+    _ifstream >> json_file;
+
+    std::vector<Robot> friendly_robots;
+    Robot goalkeeper, centerback, striker;
+
+    goalkeeper.setRole(GK);
+    goalkeeper.setId(json_file["robots"]["goalkeeper"]["id"]);
+    goalkeeper.setMaxVelocity(json_file["robots"]["goalkeeper"]["max_velocity"]);
+    centerback.setRole(CB);
+    centerback.setId(json_file["robots"]["centerback"]["id"]);
+    centerback.setMaxVelocity(json_file["robots"]["centerback"]["max_velocity"]);
+    striker.setRole(ST);
+    striker.setId(json_file["robots"]["striker"]["id"]);
+    striker.setMaxVelocity(json_file["robots"]["striker"]["max_velocity"]);
+
+    friendly_robots.push_back(goalkeeper);
+    friendly_robots.push_back(centerback);
+    friendly_robots.push_back(striker);
+
+    setRobots(FRIENDLY, friendly_robots);
+}
 
 Ball System::getBall() { return ball_; }
 
