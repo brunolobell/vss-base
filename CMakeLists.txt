@@ -12,6 +12,7 @@ include_directories("include"
                     ${Boost_INCLUDE_DIRS})
 
 set(SRCS
+    "src/geometry/field_section.cc"
     "src/io/serial_message.cc"
     "src/io/serial_sender.cc"
     "src/system/ball.cc"

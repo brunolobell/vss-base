@@ -17,6 +17,8 @@ int Robot::getRole() { return role_; }
 
 int Robot::getMaxVelocity() { return max_velocity_; }
 
+geometry::FieldSection Robot::getFieldSecton() { return field_section_; }
+
 point_2d Robot::getPosition() { return position_; }
 
 point_2d Robot::getTarget() { return target_; }
@@ -28,6 +30,8 @@ void Robot::setId(int id) { id_ = id; }
 void Robot::setRole(int role) { role_ = role; }
 
 void Robot::setMaxVelocity(int max_velocity) { max_velocity_ = max_velocity; }
+
+void Robot::setFieldSection(geometry::FieldSection field_section) { field_section_ = field_section; }
 
 void Robot::setPosition(point_2d position) { position_ = position; }
 

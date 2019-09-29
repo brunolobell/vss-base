@@ -32,21 +32,35 @@ void System::setDefaults() {
 
     std::vector<Robot> friendly_robots;
     Robot goalkeeper, centerback, striker;
+    geometry::FieldSection gk_field_section, cb_field_section, st_field_section;
+
+    gk_field_section.setMinX(json_file["robots"]["goalkeeper"]["field_section"]["min_x"]);
+    gk_field_section.setMinY(json_file["robots"]["goalkeeper"]["field_section"]["min_y"]);
+    gk_field_section.setMaxX(json_file["robots"]["goalkeeper"]["field_section"]["max_x"]);
+    gk_field_section.setMaxY(json_file["robots"]["goalkeeper"]["field_section"]["max_y"]);
+    cb_field_section.setMinX(json_file["robots"]["centerback"]["field_section"]["min_x"]);
+    cb_field_section.setMinY(json_file["robots"]["centerback"]["field_section"]["min_y"]);
+    cb_field_section.setMaxX(json_file["robots"]["centerback"]["field_section"]["max_x"]);
+    cb_field_section.setMaxY(json_file["robots"]["centerback"]["field_section"]["max_y"]);
+    cb_field_section.setMinX(json_file["robots"]["striker"]["field_section"]["min_x"]);
+    cb_field_section.setMinY(json_file["robots"]["striker"]["field_section"]["min_y"]);
+    cb_field_section.setMaxX(json_file["robots"]["striker"]["field_section"]["max_x"]);
+    cb_field_section.setMaxY(json_file["robots"]["striker"]["field_section"]["max_y"]);
 
     goalkeeper.setRole(GK);
-    goalkeeper.setId(json_file["robots"]["goalkeeper"]["id"]);
-    goalkeeper.setMaxVelocity(json_file["robots"]["goalkeeper"]["max_velocity"]);
+    goalkeeper.setId(json_file["robots"]["goalkeeper"]["general_settings"]["id"]);
+    goalkeeper.setMaxVelocity(json_file["robots"]["goalkeeper"]["general_settings"]["max_velocity"]);
+    goalkeeper.setFieldSection(gk_field_section);
     centerback.setRole(CB);
-    centerback.setId(json_file["robots"]["centerback"]["id"]);
-    centerback.setMaxVelocity(json_file["robots"]["centerback"]["max_velocity"]);
+    centerback.setId(json_file["robots"]["centerback"]["general_settings"]["id"]);
+    centerback.setMaxVelocity(json_file["robots"]["centerback"]["general_settings"]["max_velocity"]);
+    centerback.setFieldSection(cb_field_section);
     striker.setRole(ST);
-    striker.setId(json_file["robots"]["striker"]["id"]);
-    striker.setMaxVelocity(json_file["robots"]["striker"]["max_velocity"]);
+    striker.setId(json_file["robots"]["striker"]["general_settings"]["id"]);
+    striker.setMaxVelocity(json_file["robots"]["striker"]["general_settings"]["max_velocity"]);
+    striker.setFieldSection(st_field_section);
 
-    friendly_robots.push_back(goalkeeper);
-    friendly_robots.push_back(centerback);
-    friendly_robots.push_back(striker);
-
+    friendly_robots_ = {goalkeeper, centerback, striker};
     setRobots(FRIENDLY, friendly_robots);
 }
 

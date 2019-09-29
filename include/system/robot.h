@@ -5,6 +5,8 @@
 #define ROBOT_H
 
 
+#include "geometry/field_section.h"
+
 #include "CGAL/Simple_cartesian.h"
 
 #include <vector>
@@ -24,6 +26,7 @@ class Robot {
         int id_;
         int role_;
         int max_velocity_;
+        geometry::FieldSection field_section_;
         point_2d position_;
         point_2d target_;
         std::vector<float> movimentation_;
@@ -36,6 +39,7 @@ class Robot {
         int getId();
         int getRole();
         int getMaxVelocity();
+        geometry::FieldSection getFieldSecton();
         point_2d getPosition();
         point_2d getTarget();
         std::vector<float> getMovimentation();
@@ -44,6 +48,7 @@ class Robot {
         void setId(int id);
         void setRole(int role);
         void setMaxVelocity(int max_velocity);
+        void setFieldSection(geometry::FieldSection field_section);
         void setPosition(point_2d position);
         void setTarget(point_2d target);
         void setMovimentation(std::vector<float> movimentation);
