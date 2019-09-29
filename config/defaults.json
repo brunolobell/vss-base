@@ -1,0 +1,45 @@
+{
+    "robots": {
+        "goalkeeper": {
+            "general_settings": {
+                "id": 1,
+                "max_velocity": 127
+            },
+
+            "field_section": {
+                "min_x": 10,
+                "min_y": 30,
+                "max_x": 10,
+                "max_y": 50
+            }
+        },
+
+        "centerback": {
+            "general_settings": {
+                "id": 2,
+                "max_velocity": 127
+            },
+
+            "field_section": {
+                "min_x": 40,
+                "min_y": 5,
+                "max_x": 50,
+                "max_y": 145
+            }
+        },
+
+        "striker": {
+            "general_settings": {
+                "id": 3,
+                "max_velocity": 127
+            },
+
+            "field_section": {
+                "min_x": 100,
+                "min_y": 5,
+                "max_x": 200,
+                "max_y": 145
+            }
+        }
+    }
+}
