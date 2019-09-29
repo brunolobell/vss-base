@@ -9,7 +9,7 @@
             "field_section": {
                 "min_x": 10,
                 "min_y": 30,
-                "max_x": 0,
+                "max_x": 10,
                 "max_y": 50
             }
         },

@@ -15,6 +15,7 @@
 #include <chrono>
 #include <string>
 #include <fstream>
+#include <iostream>
 
 
 namespace vss_furgbol {
@@ -38,6 +39,10 @@ class System {
         io::SerialMessage serial_message_;
         std::vector<uint8_t> buffer_to_send_;
 
+        std::string serial_port_name_;
+        int frequency_;
+        float period_;
+
     public:
         System();
         ~System();
@@ -45,6 +50,9 @@ class System {
         void init();
         void setConfigurations();
         void setDefaults();
+
+        void printConfigurations();
+        void printDefaults();
 
         //Getters
         Ball getBall();
