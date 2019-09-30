@@ -5,17 +5,20 @@
 #define SYSTEM_H
 
 
+#include "geometry/point_2d.h"
+#include "io/serial_message.h"
+#include "io/serial_sender.h"
 #include "system/ball.h"
 #include "system/robot.h"
-#include "io/serial_sender.h"
-#include "io/serial_message.h"
 
 #include "json.hpp"
 
+#include <cinttypes>
 #include <chrono>
-#include <string>
 #include <fstream>
 #include <iostream>
+#include <queue>
+#include <string>
 
 
 namespace vss_furgbol {
@@ -31,9 +34,7 @@ class System {
         Ball ball_;
         std::vector<Robot> friendly_robots_;
         std::vector<Robot> enemy_robots_;
-
-        //TCP Networking
-        //io::TCPReceiver tcp_receiver_;
+        std::vector<geometry::Point2D> goals_;
 
         //Serial Networking
         int serial_package_id_;
@@ -41,10 +42,9 @@ class System {
         std::string serial_port_name_;
         int frequency_;
         float period_;
+        int max_sending_queue_size_;
         io::SerialSender *serial_sender_;
         io::SerialMessage serial_message_;
-        std::vector<uint8_t> buffer_to_send_;
-        std::vector<std::vector<uint8_t>> sending_queue_;
 
     public:
         System();
@@ -64,7 +64,6 @@ class System {
         std::chrono::duration<float> getSerialSendingFrequency();
         io::SerialSender* getSerialSender();
         io::SerialMessage getSerialMessage();
-        std::vector<uint8_t> getBuffer();
 
         //Setters
         void setBall(Ball ball);

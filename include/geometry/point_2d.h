@@ -27,10 +27,8 @@ class Point2D {
         void setY(float y);
 
         //Operators
-        Point2D operator+(Point2D point);
-        Point2D operator-(Point2D point);
-        Point2D operator*(Point2D point);
-        Point2D operator/(Point2D point);
+        bool operator!=(Point2D point);
+        bool operator==(Point2D point);
         void operator=(Point2D point);
 };
 

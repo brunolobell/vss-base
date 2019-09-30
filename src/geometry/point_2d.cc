@@ -24,13 +24,15 @@ void Point2D::setX(float x) { x_ = x; }
 
 void Point2D::setY(float y) { y_ = y; }
 
-Point2D Point2D::operator+(Point2D point) { return Point2D(x_ + point.x_, y_ + point.y_); }
+bool Point2D::operator!=(Point2D point) {
+    if ((x_ != point.x_) || (y_ != point.y_)) return true;
+    return false;
+}
 
-Point2D Point2D::operator-(Point2D point) { return Point2D(x_ - point.x_, y_ - point.y_); }
-
-Point2D Point2D::operator*(Point2D point) { return Point2D(x_ * point.x_, y_ * point.y_); }
-
-Point2D Point2D::operator/(Point2D point) { return Point2D(x_ / point.x_, y_ / point.y_); }
+bool Point2D::operator==(Point2D point) {
+    if ((x_ == point.x_) && (y_ == point.y_)) return true;
+    return false;
+}
 
 void Point2D::operator=(Point2D point) {
     x_ = point.x_;

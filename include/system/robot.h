@@ -23,6 +23,8 @@ class Robot {
         int id_;
         int role_;
         int max_velocity_;
+        float max_ball_distance_;
+        float yaw_;
         geometry::FieldSection field_section_;
         geometry::Point2D position_;
         geometry::Point2D target_;
@@ -30,13 +32,15 @@ class Robot {
 
     public:
         Robot();
-        Robot(int id, int role, int max_velocity, geometry::FieldSection field_section, geometry::Point2D position, geometry::Point2D target, std::vector<float> movimentation);
+        Robot(int id, int role, int max_velocity, float max_ball_distance, float yaw, geometry::FieldSection field_section, geometry::Point2D position, geometry::Point2D target, std::vector<float> movimentation);
         ~Robot();
 
         //Getters
         int getId();
         int getRole();
         int getMaxVelocity();
+        float getMaxBallDistance();
+        float getYaw();
         geometry::FieldSection getFieldSecton();
         geometry::Point2D getPosition();
         geometry::Point2D getTarget();
@@ -46,6 +50,8 @@ class Robot {
         void setId(int id);
         void setRole(int role);
         void setMaxVelocity(int max_velocity);
+        void setMaxBallDistance(float max_ball_distance);
+        void setYaw(float yaw);
         void setFieldSection(geometry::FieldSection field_section);
         void setPosition(geometry::Point2D position);
         void setTarget(geometry::Point2D target);

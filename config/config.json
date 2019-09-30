@@ -2,7 +2,8 @@
     "networking": {
         "serial": {
             "port": "/dev/ttyUSB0",
-            "sending_frequency": 200
+            "sending_frequency": 200,
+            "max_queue_size": 10
         }
     }
 }

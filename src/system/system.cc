@@ -7,8 +7,7 @@
 namespace vss_furgbol {
 namespace system {
 
-System::System() : serial_package_id_(0), serial_sending_frequency_(1), 
-                    buffer_to_send_(std::vector<uint8_t>(5, 0)) {}
+System::System() : serial_package_id_(0), serial_sending_frequency_(1) {}
 
 System::~System() {}
 
@@ -24,9 +23,12 @@ void System::setConfigurations() {
     std::ifstream _ifstream("config/config.json");
     nlohmann::json json_file;
     _ifstream >> json_file;
+
     serial_port_name_ = json_file["networking"]["serial"]["port"];
     frequency_ = json_file["networking"]["serial"]["sending_frequency"];
+    max_sending_queue_size_ = json_file["networking"]["serial"]["max_queue_size"];
     period_ = 1/(float)frequency_;
+
     //setSerialSender(serial_port_name_);
     setSerialSendingFrequency(frequency_);
     std::cout << "[STATUS]: Configuration done!" << std::endl;
@@ -57,17 +59,32 @@ void System::setDefaults() {
     goalkeeper.setRole(GK);
     goalkeeper.setId(json_file["robots"]["goalkeeper"]["general_settings"]["id"]);
     goalkeeper.setMaxVelocity(json_file["robots"]["goalkeeper"]["general_settings"]["max_velocity"]);
+    goalkeeper.setMaxBallDistance(json_file["robots"]["goalkeeper"]["general_settings"]["max_ball_distance"]);
     goalkeeper.setFieldSection(gk_field_section);
     centerback.setRole(CB);
     centerback.setId(json_file["robots"]["centerback"]["general_settings"]["id"]);
     centerback.setMaxVelocity(json_file["robots"]["centerback"]["general_settings"]["max_velocity"]);
+    centerback.setMaxBallDistance(json_file["robots"]["centerback"]["general_settings"]["max_ball_distance"]);
     centerback.setFieldSection(cb_field_section);
     striker.setRole(ST);
     striker.setId(json_file["robots"]["striker"]["general_settings"]["id"]);
     striker.setMaxVelocity(json_file["robots"]["striker"]["general_settings"]["max_velocity"]);
+    striker.setMaxBallDistance(json_file["robots"]["striker"]["general_settings"]["max_ball_distance"]);
     striker.setFieldSection(st_field_section);
 
     friendly_robots_ = {goalkeeper, centerback, striker};
+
+    geometry::Point2D enemy_goal(
+        json_file["goals"]["enemy"]["x_position"],
+        json_file["goals"]["enemy"]["center"]
+    );
+    geometry::Point2D friendly_goal(
+        json_file["goals"]["friendly"]["x_position"],
+        json_file["goals"]["friendly"]["center"]
+    );
+
+    goals_ = {enemy_goal, friendly_goal};
+
     std::cout << "[STATUS]: Defaults setted!" << std::endl;
 }
 
@@ -76,38 +93,54 @@ void System::printConfigurations() {
     std::cout << "Serial port: " << serial_port_name_ << std::endl;
     std::cout << "Serial sending frequency: " << frequency_ << "hz" << std::endl;
     std::cout << "Time between serial messages: " << period_ << "s" << std::endl;
+    std::cout << "Max sending queue size: " << max_sending_queue_size_ << std::endl;
     std::cout << std::endl;
 }
 
 void System::printDefaults() {
     std::cout << "-> Defaults:" << std::endl;
 
-    std::cout << "*Goalkeeper:" << std::endl;
-    std::cout << "\tID: " << friendly_robots_[GK].getId() << std::endl;
-    std::cout << "\tMax velocity: " << friendly_robots_[GK].getMaxVelocity() << std::endl;
-    std::cout << "\tField section:" << std::endl;
-    std::cout << "\t\tMin x: " << friendly_robots_[GK].getFieldSecton().getMinX() << std::endl;
-    std::cout << "\t\tMin y: " << friendly_robots_[GK].getFieldSecton().getMinY() << std::endl;
-    std::cout << "\t\tMax x: " << friendly_robots_[GK].getFieldSecton().getMaxX() << std::endl;
-    std::cout << "\t\tMax y: " << friendly_robots_[GK].getFieldSecton().getMaxY() << std::endl;
+    std::cout << "**Robots:" << std::endl;
 
-    std::cout << "*Centerback:" << std::endl;
-    std::cout << "\tID: " << friendly_robots_[CB].getId() << std::endl;
-    std::cout << "\tMax velocity: " << friendly_robots_[CB].getMaxVelocity() << std::endl;
-    std::cout << "\tField section:" << std::endl;
-    std::cout << "\t\tMin x: " << friendly_robots_[CB].getFieldSecton().getMinX() << std::endl;
-    std::cout << "\t\tMin y: " << friendly_robots_[CB].getFieldSecton().getMinY() << std::endl;
-    std::cout << "\t\tMax x: " << friendly_robots_[CB].getFieldSecton().getMaxX() << std::endl;
-    std::cout << "\t\tMax y: " << friendly_robots_[CB].getFieldSecton().getMaxY() << std::endl;
+    std::cout << "\t*Goalkeeper:" << std::endl;
+    std::cout << "\t\tID: " << friendly_robots_[GK].getId() << std::endl;
+    std::cout << "\t\tMax velocity: " << friendly_robots_[GK].getMaxVelocity() << std::endl;
+    std::cout << "\t\tMax ball velocity: " << friendly_robots_[GK].getMaxBallDistance() << std::endl;
+    std::cout << "\t\tField section:" << std::endl;
+    std::cout << "\t\t\tMin x: " << friendly_robots_[GK].getFieldSecton().getMinX() << std::endl;
+    std::cout << "\t\t\tMin y: " << friendly_robots_[GK].getFieldSecton().getMinY() << std::endl;
+    std::cout << "\t\t\tMax x: " << friendly_robots_[GK].getFieldSecton().getMaxX() << std::endl;
+    std::cout << "\t\t\tMax y: " << friendly_robots_[GK].getFieldSecton().getMaxY() << std::endl;
 
-    std::cout << "*Striker:" << std::endl;
-    std::cout << "\tID: " << friendly_robots_[ST].getId() << std::endl;
-    std::cout << "\tMax velocity: " << friendly_robots_[ST].getMaxVelocity() << std::endl;
-    std::cout << "\tField section:" << std::endl;
-    std::cout << "\t\tMin x: " << friendly_robots_[ST].getFieldSecton().getMinX() << std::endl;
-    std::cout << "\t\tMin y: " << friendly_robots_[ST].getFieldSecton().getMinY() << std::endl;
-    std::cout << "\t\tMax x: " << friendly_robots_[ST].getFieldSecton().getMaxX() << std::endl;
-    std::cout << "\t\tMax y: " << friendly_robots_[ST].getFieldSecton().getMaxY() << std::endl;
+    std::cout << "\t*Centerback:" << std::endl;
+    std::cout << "\t\tID: " << friendly_robots_[CB].getId() << std::endl;
+    std::cout << "\t\tMax velocity: " << friendly_robots_[CB].getMaxVelocity() << std::endl;
+    std::cout << "\t\tMax ball velocity: " << friendly_robots_[CB].getMaxBallDistance() << std::endl;
+    std::cout << "\t\tField section:" << std::endl;
+    std::cout << "\t\t\tMin x: " << friendly_robots_[CB].getFieldSecton().getMinX() << std::endl;
+    std::cout << "\t\t\tMin y: " << friendly_robots_[CB].getFieldSecton().getMinY() << std::endl;
+    std::cout << "\t\t\tMax x: " << friendly_robots_[CB].getFieldSecton().getMaxX() << std::endl;
+    std::cout << "\t\t\tMax y: " << friendly_robots_[CB].getFieldSecton().getMaxY() << std::endl;
+
+    std::cout << "\t*Striker:" << std::endl;
+    std::cout << "\t\tID: " << friendly_robots_[ST].getId() << std::endl;
+    std::cout << "\t\tMax velocity: " << friendly_robots_[ST].getMaxVelocity() << std::endl;
+    std::cout << "\t\tMax ball velocity: " << friendly_robots_[ST].getMaxBallDistance() << std::endl;
+    std::cout << "\t\tField section:" << std::endl;
+    std::cout << "\t\t\tMin x: " << friendly_robots_[ST].getFieldSecton().getMinX() << std::endl;
+    std::cout << "\t\t\tMin y: " << friendly_robots_[ST].getFieldSecton().getMinY() << std::endl;
+    std::cout << "\t\t\tMax x: " << friendly_robots_[ST].getFieldSecton().getMaxX() << std::endl;
+    std::cout << "\t\t\tMax y: " << friendly_robots_[ST].getFieldSecton().getMaxY() << std::endl;
+
+    std::cout << "**Goals:" << std::endl;
+
+    std::cout << "\t*Enemy:" << std::endl;
+    std::cout << "\t\tCenter: " << goals_[ENEMY].getY() << std::endl;
+    std::cout << "\t\tX position: " << goals_[ENEMY].getX() << std::endl;
+
+    std::cout << "\t*Friendly:" << std::endl;
+    std::cout << "\t\tCenter: " << goals_[FRIENDLY].getY() << std::endl;
+    std::cout << "\t\tX position: " << goals_[FRIENDLY].getX() << std::endl;
 
     std::cout << std::endl;
 }
@@ -128,8 +161,6 @@ std::chrono::duration<float> System::getSerialSendingFrequency() { return serial
 io::SerialSender* System::getSerialSender() { return serial_sender_; }
 
 io::SerialMessage System::getSerialMessage() { return serial_message_; }
-
-std::vector<uint8_t> System::getBuffer() { return buffer_to_send_; }
 
 void System::setBall(Ball ball) { ball_ = ball; }
 
