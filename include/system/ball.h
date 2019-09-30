@@ -32,7 +32,7 @@ class Ball {
         void setMovimentation(std::vector<float> movimentation);
 
         //Operators
-        Ball operator=(Ball ball);
+        void operator=(Ball ball);
 };
 
 }

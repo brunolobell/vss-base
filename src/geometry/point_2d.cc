@@ -32,7 +32,10 @@ Point2D Point2D::operator*(Point2D point) { return Point2D(x_ * point.x_, y_ * p
 
 Point2D Point2D::operator/(Point2D point) { return Point2D(x_ / point.x_, y_ / point.y_); }
 
-Point2D Point2D::operator=(Point2D point) { return Point2D(point.x_, point.y_); }
+void Point2D::operator=(Point2D point) {
+    x_ = point.x_;
+    y_ = point.y_;
+}
     
 }
 }

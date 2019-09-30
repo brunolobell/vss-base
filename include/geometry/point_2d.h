@@ -31,7 +31,7 @@ class Point2D {
         Point2D operator-(Point2D point);
         Point2D operator*(Point2D point);
         Point2D operator/(Point2D point);
-        Point2D operator=(Point2D point);
+        void operator=(Point2D point);
 };
 
 }

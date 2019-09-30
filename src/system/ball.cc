@@ -24,7 +24,10 @@ void Ball::setPosition(geometry::Point2D position) { position_ = position; }
 
 void Ball::setMovimentation(std::vector<float> movimentation) { movimentation_ = movimentation; }
 
-Ball Ball::operator=(Ball ball) { return Ball(ball.position_, ball.movimentation_); }
+void Ball::operator=(Ball ball) {
+    position_ = ball.position_;
+    movimentation_ = ball.movimentation_;
+}
 
 } // namespace system
 } // namespace vss_furgbol

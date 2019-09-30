@@ -12,7 +12,9 @@ include_directories("include"
 
 set(SRCS
     "src/geometry/field_section.cc"
+    "src/geometry/geometry.cc"
     "src/geometry/point_2d.cc"
+    "src/geometry/vector_2d.cc"
     "src/io/serial_message.cc"
     "src/io/serial_sender.cc"
     "src/system/ball.cc"

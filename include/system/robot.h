@@ -52,7 +52,7 @@ class Robot {
         void setMovimentation(std::vector<float> movimentation);
 
         //Operators
-        Robot operator=(Robot robot);
+        void operator=(Robot robot);
 };
 
 } // namespace system

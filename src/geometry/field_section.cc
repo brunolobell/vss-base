@@ -34,7 +34,12 @@ void FieldSection::setMaxX(float max_x) { max_x_ = max_x; }
 
 void FieldSection::setMaxY(float max_y) { max_y_ = max_y; }
 
-FieldSection FieldSection::operator=(FieldSection field) { return FieldSection(field.min_x_, field.min_y_, field.max_x_, field.max_y_); }
+void FieldSection::operator=(FieldSection field) {
+    min_x_ = field.min_x_;
+    min_y_ = field.min_y_;
+    max_x_ = field.max_x_;
+    max_y_ = field.max_y_; 
+}
 
 } // geometry
 } // vss_furgbol

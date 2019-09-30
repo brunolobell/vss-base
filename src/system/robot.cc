@@ -49,7 +49,15 @@ void Robot::setTarget(geometry::Point2D target) { target_ = target; }
 
 void Robot::setMovimentation(std::vector<float> movimentation) { movimentation_ = movimentation; }
 
-Robot Robot::operator=(Robot robot) { return Robot(robot.id_, robot.role_, robot.max_velocity_, robot.field_section_, robot.position_, robot.target_, robot.movimentation_); }
+void Robot::operator=(Robot robot) {
+    id_ = robot.id_;
+    role_ = robot.role_; 
+    max_velocity_ = robot.max_velocity_;
+    field_section_ = robot.field_section_;
+    position_ = robot.position_;
+    target_ = robot.target_;
+    movimentation_ = robot.movimentation_;
+}
 
 } // namespace system
 } // namespace vss_furgbol

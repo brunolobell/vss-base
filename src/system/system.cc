@@ -38,7 +38,6 @@ void System::setDefaults() {
     nlohmann::json json_file;
     _ifstream >> json_file;
 
-    std::vector<Robot> friendly_robots;
     Robot goalkeeper, centerback, striker;
     geometry::FieldSection gk_field_section, cb_field_section, st_field_section;
 
@@ -69,7 +68,6 @@ void System::setDefaults() {
     striker.setFieldSection(st_field_section);
 
     friendly_robots_ = {goalkeeper, centerback, striker};
-    setRobots(FRIENDLY, friendly_robots);
     std::cout << "[STATUS]: Defaults setted!" << std::endl;
 }
 

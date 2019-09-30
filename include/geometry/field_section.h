@@ -33,7 +33,7 @@ class FieldSection {
         void setMaxY(float max_y);
 
         //Operators
-        FieldSection operator=(FieldSection field);
+        void operator=(FieldSection field);
 };
 
 } // namespace geometry

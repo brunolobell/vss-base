@@ -7,10 +7,10 @@
             },
 
             "field_section": {
-                "min_x": 10,
-                "min_y": 30,
-                "max_x": 10,
-                "max_y": 50
+                "min_x": 10.5,
+                "min_y": 30.5,
+                "max_x": 10.5,
+                "max_y": 50.5
             }
         },
 
@@ -21,10 +21,10 @@
             },
 
             "field_section": {
-                "min_x": 40,
-                "min_y": 5,
-                "max_x": 50,
-                "max_y": 145
+                "min_x": 40.5,
+                "min_y": 5.5,
+                "max_x": 50.5,
+                "max_y": 145.5
             }
         },
 
@@ -35,10 +35,10 @@
             },
 
             "field_section": {
-                "min_x": 100,
-                "min_y": 5,
-                "max_x": 200,
-                "max_y": 145
+                "min_x": 100.5,
+                "min_y": 5.5,
+                "max_x": 200.5,
+                "max_y": 145.5
             }
         }
     }
