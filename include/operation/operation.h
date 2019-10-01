@@ -20,12 +20,19 @@ enum DirectionsLabel {
     NEGATIVE = 1, POSITIVE = 3
 };
 
+enum OutOfPlaceLabel {
+    NO, BEHIND, AHEAD
+};
+
 class Operation {
     private:
         system::Robot *robot_;
         system::Ball *ball_;
 
-        bool translating_;
+        bool running_;
+
+        int out_of_place_;
+        bool aligned_;
         bool rotating_;
 
         int linear_velocity_;
@@ -42,11 +49,17 @@ class Operation {
          
     public:
         Operation();
-        Operation(int max_queue_size, geometry::Point2D enemy_goal, geometry::Point2D friendly_goal);
+        Operation(system::Robot *robot, system::Ball *ball, int max_queue_size, geometry::Point2D enemy_goal, geometry::Point2D friendly_goal);
         ~Operation();
+
+        void turnOn();
+        void turnOff();
+        void init();
 
         void setTarget();
         void setMotion();
+        void watchPosition();
+        void getBack();
 
         void mountBuffer();
         void pushOnQueue();

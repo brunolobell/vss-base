@@ -17,6 +17,7 @@ set(SRCS
     "src/geometry/vector_2d.cc"
     "src/io/serial_message.cc"
     "src/io/serial_sender.cc"
+    "src/operation/operation.cc"
     "src/system/ball.cc"
     "src/system/robot.cc"
     "src/system/system.cc")

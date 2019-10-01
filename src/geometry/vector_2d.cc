@@ -32,6 +32,8 @@ float Vector2D::getModule() {
     return sqrt(x*x + y*y);
 }
 
+float Vector2D::getAngle() { return getComponentX() / getComponentY(); }
+
 float Vector2D::getReferentX(float y) { return (((y - origin_.getY()) * destiny_.getX()) / getComponentY()); }
 
 float Vector2D::getReferentY(float x) { return (((x * getComponentY()) / destiny_.getX()) + origin_.getY()); }

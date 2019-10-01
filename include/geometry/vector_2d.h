@@ -27,6 +27,7 @@ class Vector2D {
         float getComponentX();
         float getComponentY();
         float getModule();
+        float getAngle();
         float getReferentX(float y);
         float getReferentY(float x);
 
