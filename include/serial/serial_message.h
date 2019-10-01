@@ -12,7 +12,7 @@
 
 
 namespace vss_furgbol {
-namespace io {
+namespace serial {
 
 class SerialMessage {
     private:
@@ -49,7 +49,7 @@ class SerialMessage {
         uint8_t getDirectionAngular();
 };
 
-}  // namespace io
+}  // namespace serial
 }  // namespace vss_furgbol
 
 

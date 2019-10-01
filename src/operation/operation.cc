@@ -30,49 +30,5 @@ void Operation::init() {
     }
 }
 
-void Operation::setTarget() {
-    if (out_of_place_ != 0) {
-        robot_->setTarget(
-            geometry::Point2D(
-                robot_->getFieldSecton().getMaxX(),
-                robot_->getPosition().getY()
-            )
-        );
-    } else {
-        switch (robot_->getRole()) {
-            case system::GK:
-                robot_->setTarget(
-                    geometry::Point2D(
-                        robot_->getPosition().getX(),
-                        ball_->getPosition().getY()
-                    )
-                );
-                break;
-            case system::CB:
-                robot_->setTarget(
-                    geometry::Point2D(
-                        robot_->getPosition().getX(),
-                        geometry::Vector2D(
-                            friendly_goal_,
-                            ball_->getPosition()
-                        ).getReferentY(robot_->getPosition().getX())
-                    )
-                );
-                break;
-            case system::ST:
-                robot_->setTarget(
-                    geometry::Point2D(
-                        robot_->getPosition().getX(),
-                        geometry::Vector2D(
-                            ball_->getPosition(),
-                            enemy_goal_
-                        ).getReferentY(robot_->getPosition().getX())
-                    )
-                );
-                break;
-        }
-    }
-}
-
 } // namespace operation
 } // namespace vss_furgbol

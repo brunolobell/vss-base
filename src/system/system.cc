@@ -7,31 +7,15 @@
 namespace vss_furgbol {
 namespace system {
 
-System::System() : serial_package_id_(0), serial_sending_frequency_(1) {}
+System::System() : serial_package_id_(0), serial_sending_frequency_(1), configured_(false) {}
 
 System::~System() {}
 
 void System::init() {
     setConfigurations();
-    printConfigurations();
+    if (configured_) printConfigurations();
     setDefaults();
     printDefaults();
-}
-
-void System::setConfigurations() {
-    std::cout << "[STATUS]: Configuring system..." << std::endl;
-    std::ifstream _ifstream("config/config.json");
-    nlohmann::json json_file;
-    _ifstream >> json_file;
-
-    serial_port_name_ = json_file["networking"]["serial"]["port"];
-    frequency_ = json_file["networking"]["serial"]["sending_frequency"];
-    max_sending_queue_size_ = json_file["networking"]["serial"]["max_queue_size"];
-    period_ = 1/(float)frequency_;
-
-    //setSerialSender(serial_port_name_);
-    setSerialSendingFrequency(frequency_);
-    std::cout << "[STATUS]: Configuration done!" << std::endl;
 }
 
 void System::setDefaults() {
@@ -86,15 +70,6 @@ void System::setDefaults() {
     goals_ = {enemy_goal, friendly_goal};
 
     std::cout << "[STATUS]: Defaults setted!" << std::endl;
-}
-
-void System::printConfigurations() {
-    std::cout << "-> Configurations:" << std::endl;
-    std::cout << "Serial port: " << serial_port_name_ << std::endl;
-    std::cout << "Serial sending frequency: " << frequency_ << "hz" << std::endl;
-    std::cout << "Time between serial messages: " << period_ << "s" << std::endl;
-    std::cout << "Max sending queue size: " << max_sending_queue_size_ << std::endl;
-    std::cout << std::endl;
 }
 
 void System::printDefaults() {

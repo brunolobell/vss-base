@@ -26,16 +26,6 @@ float Vector2D::getComponentX() { return destiny_.getX() - origin_.getX(); }
 
 float Vector2D::getComponentY() { return destiny_.getY() - origin_.getY(); }
 
-float Vector2D::getModule() {
-    float x = getComponentX();
-    float y = getComponentY();
-    return sqrt(x*x + y*y);
-}
-
-float Vector2D::getAngle() { return getComponentX() / getComponentY(); }
-
-float Vector2D::getReferentX(float y) { return (((y - origin_.getY()) * destiny_.getX()) / getComponentY()); }
-
 float Vector2D::getReferentY(float x) { return (((x * getComponentY()) / destiny_.getX()) + origin_.getY()); }
 
 void Vector2D::setOrigin(Point2D origin) { origin_ = origin; }

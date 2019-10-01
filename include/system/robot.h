@@ -28,7 +28,6 @@ class Robot {
         geometry::FieldSection field_section_;
         geometry::Point2D position_;
         geometry::Point2D target_;
-        std::vector<float> movimentation_;
 
     public:
         Robot();

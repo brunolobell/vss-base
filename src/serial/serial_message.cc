@@ -1,9 +1,9 @@
 // ® Copyright FURGBot 2019
 
-#include "io/serial_message.h"
+#include "serial/serial_message.h"
 
 namespace vss_furgbol {
-namespace io {
+namespace serial {
 
 SerialMessage::SerialMessage() { clear(); }
 
@@ -47,5 +47,5 @@ uint8_t SerialMessage::getDirectionLinear() { return direction_linear_; }
 
 uint8_t SerialMessage::getDirectionAngular() { return direction_angular_; }
 
-} // namespace io
+} // namespace serial
 } // namespace vss_furgbol

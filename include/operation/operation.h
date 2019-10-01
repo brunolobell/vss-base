@@ -31,18 +31,6 @@ class Operation {
 
         bool running_;
 
-        int out_of_place_;
-        bool aligned_;
-        bool rotating_;
-
-        int linear_velocity_;
-        int angular_velocity_;
-        int linear_direction_;
-        int angular_direction_;
-
-        geometry::Point2D enemy_goal_;
-        geometry::Point2D friendly_goal_;
-
         int max_queue_size_;
         std::vector<uint8_t> buffer_to_send_;
         std::queue<std::vector<uint8_t>> sending_queue_;
@@ -62,7 +50,6 @@ class Operation {
         void getBack();
 
         void mountBuffer();
-        void pushOnQueue();
 };
 
 } // namespace operation

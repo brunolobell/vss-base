@@ -26,9 +26,6 @@ class Vector2D {
         Point2D getDestiny();
         float getComponentX();
         float getComponentY();
-        float getModule();
-        float getAngle();
-        float getReferentX(float y);
         float getReferentY(float x);
 
         //Setters
