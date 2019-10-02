@@ -10,6 +10,7 @@
 #include "system/robot.h"
 
 #include <cinttypes>
+#include <mutex>
 #include <queue>
 
 
@@ -33,8 +34,6 @@ class Operation {
         system::Robot *robot_;
         system::Ball *ball_;
 
-        bool *running_;
-
         int max_queue_size_;
         int velocity_k_;
 
@@ -43,13 +42,16 @@ class Operation {
         int linear_direction_;
         int angular_direction_;
 
+        bool *running_;
+        bool *status_changed_;
+        std::mutex mutex_;
+
         std::vector<uint8_t> buffer_to_send_;
         std::queue<std::vector<uint8_t>> sending_queue_;
          
     public:
-
         Operation();
-        Operation(system::Robot *robot, system::Ball *ball);
+        Operation(system::Robot *robot, system::Ball *ball, bool *running, bool *status_changed);
         ~Operation();
 
         void setConfigurations();

@@ -16,13 +16,12 @@ namespace operation {
 
 Operation::Operation() : sending_queue_() {}
 
-Operation::Operation(system::Robot *robot, system::Ball *ball) : robot_(robot), ball_(ball),
-    sending_queue_() {}
+Operation::Operation(system::Robot *robot, system::Ball *ball, bool *running, bool *status_changed) : robot_(robot), ball_(ball),
+    sending_queue_(), status_changed_(status_changed), running_(running) {}
 
 Operation::~Operation() {}
 
 void Operation::setConfigurations() {
-    std::cout << "[STATUS]: Configuring operation..." << std::endl;
     std::ifstream _ifstream("config/operation.json");
     nlohmann::json json_file;
     _ifstream >> json_file;
@@ -42,8 +41,25 @@ void Operation::printConfigurations() {
 
 void Operation::init() {
     setConfigurations();
-    if (*running_) printConfigurations();
+    printConfigurations();
+
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        *status_changed_ = true;
+    }
+
     exec();
+
+    *status_changed_ = false;
+    end();
+}
+
+void Operation::end() {
+    std::cout << "[STATUS]: Closing operator..." << std::endl;
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        *status_changed_ = true;
+    }    
 }
 
 void Operation::exec() {

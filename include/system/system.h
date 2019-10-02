@@ -6,8 +6,9 @@
 
 
 #include "geometry/point_2d.h"
+#include "io/serial_sender.h"
+#include "io/tcp_receiver.h"
 #include "operation/operation.h"
-#include "serial/serial_sender.h"
 #include "system/ball.h"
 #include "system/robot.h"
 
@@ -16,8 +17,10 @@
 #include <cinttypes>
 #include <fstream>
 #include <iostream>
+#include <mutex>
 #include <queue>
 #include <string>
+#include <thread>
 
 
 namespace vss_furgbol {
@@ -35,21 +38,48 @@ class System {
         std::vector<Robot> enemy_robots_;
 
         //Serial
-        serial::SerialSender *serial_sender_;
+        io::SerialSender *serial_sender_;
         bool serial_is_running_;
         bool serial_is_paused_;
+        bool serial_status_changed_;
+        std::thread serial_thread_;
+        std::mutex serial_mutex_;
 
-        //Operation
+        //TCP
+        io::TCPReceiver *tcp_receiver_;
+        bool tcp_is_running_;
+        bool tcp_status_changed_;
+        std::thread tcp_thread_;
+        std::mutex tcp_mutex_;
+
+        //Goalkeeper Operator
         operation::Operation *gk_operator_;
-        operation::Operation *cb_operator_;
-        operation::Operation *st_operator_;
+        bool gk_operator_is_running_;
+        bool gk_operator_status_changed_;
+        std::thread gk_operator_thread_;
+        std::mutex gk_operator_mutex_;
 
-        //Perception
-        //perception::Watcher watcher_;
-        //perception::Dealer plotter_;
+        //Centerback Operator
+        operation::Operation *cb_operator_;
+        bool cb_operator_is_running_;
+        bool cb_operator_status_changed_;
+        std::thread cb_operator_thread_;
+        std::mutex cb_operator_mutex_;
+
+        //Striker Operator
+        operation::Operation *st_operator_;
+        bool st_operator_is_running_;
+        bool st_operator_status_changed_;
+        std::thread st_operator_thread_;
+        std::mutex st_operator_mutex_;
 
         void setDefaults();
         void printDefaults();
+
+        void exec();
+        void end();
+
+        void clearScreen();
 
     public:
         System();

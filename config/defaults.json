@@ -2,7 +2,7 @@
     "robots": {
         "goalkeeper": {
             "general_settings": {
-                "id": 1,
+                "id": 2,
                 "max_velocity": 90,
                 "max_ball_distance": 6
             },
@@ -16,7 +16,7 @@
 
         "centerback": {
             "general_settings": {
-                "id": 2,
+                "id": 1,
                 "max_velocity": 90,
                 "max_ball_distance": 6
             },

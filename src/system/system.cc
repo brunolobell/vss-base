@@ -3,6 +3,8 @@
 
 #include "system/system.h"
 
+#include <chrono>
+
 
 namespace vss_furgbol {
 namespace system {
@@ -12,17 +14,117 @@ System::System() {}
 System::~System() {}
 
 void System::init() {
+    clearScreen();
     setDefaults();
     printDefaults();
 
-    gk_operator_ = new operation::Operation(&friendly_robots_[GK], &ball_);
-    cb_operator_ = new operation::Operation(&friendly_robots_[CB], &ball_);
-    st_operator_ = new operation::Operation(&friendly_robots_[ST], &ball_);
+    gk_operator_is_running_ = true;
+    gk_operator_status_changed_ = false;
+    gk_operator_ = new operation::Operation(&friendly_robots_[GK], &ball_, &gk_operator_is_running_, &gk_operator_status_changed_);
+    std::cout << "[STATUS]: Configuring goalkeeper operator..." << std::endl;
+    gk_operator_thread_ = std::thread(&operation::Operation::init, gk_operator_);
+    while (!gk_operator_status_changed_);
+
+    cb_operator_is_running_ = true;
+    cb_operator_status_changed_ = false;
+    cb_operator_ = new operation::Operation(&friendly_robots_[CB], &ball_, &cb_operator_is_running_, &cb_operator_status_changed_);
+    std::cout << "[STATUS]: Configuring goalkeeper operator..." << std::endl;
+    cb_operator_thread_ = std::thread(&operation::Operation::init, cb_operator_);
+    while (!cb_operator_status_changed_);
+
+    st_operator_is_running_ = true;
+    st_operator_status_changed_ = false;
+    st_operator_ = new operation::Operation(&friendly_robots_[ST], &ball_, &st_operator_is_running_, &st_operator_status_changed_);
+    std::cout << "[STATUS]: Configuring goalkeeper operator..." << std::endl;
+    st_operator_thread_ = std::thread(&operation::Operation::init, st_operator_);
+    while (!st_operator_status_changed_);
 
     serial_is_running_ = true;
-    serial_is_paused_ = false;
-    serial_sender_ = new serial::SerialSender(&serial_is_running_, &serial_is_paused_, gk_operator_->getSendingQueue(), cb_operator_->getSendingQueue(), st_operator_->getSendingQueue());
-    serial_sender_->init();
+    serial_is_paused_ = true;
+    serial_status_changed_ = false;
+    serial_sender_ = new io::SerialSender(&serial_is_running_, &serial_is_paused_, &serial_status_changed_, gk_operator_->getSendingQueue(), cb_operator_->getSendingQueue(), st_operator_->getSendingQueue());
+    serial_thread_ = std::thread(&io::SerialSender::init, serial_sender_);
+    while (!serial_status_changed_);
+
+    tcp_is_running_ = true;
+    tcp_status_changed_ = false;
+    tcp_receiver_ = new io::TCPReceiver(friendly_robots_, enemy_robots_, &ball_, &tcp_is_running_, &tcp_status_changed_);
+    tcp_thread_ = std::thread(&io::TCPReceiver::init, tcp_receiver_);
+    while (!tcp_status_changed_);
+
+    std::cout << std::endl << "**Press enter to continue.";
+    std::getchar();
+    clearScreen();
+
+    exec();
+}
+
+void System::exec() {
+    int option, count;
+
+    do {
+        std::cout << std::endl << std::endl << "\t------[MENU]------" << std::endl;
+        std::cout << "[1] - Start system" << std::endl;
+        std::cout << "[2] - Pause system" << std::endl;
+        std::cout << "[0] - Close system" << std::endl;
+        std::cout << "\t-> ";
+        std::cin >> option;
+
+        clearScreen();
+
+        switch (option) {
+            case 0:
+                {
+                    std::lock_guard<std::mutex> lock(serial_mutex_);
+                    serial_status_changed_ = false;
+                }
+                {
+                    std::lock_guard<std::mutex> lock(serial_mutex_);
+                    serial_is_running_ = false;
+                }
+                while (!serial_status_changed_);
+                end();
+                break;
+            case 1:
+                if (serial_is_paused_) {
+                    {
+                        std::lock_guard<std::mutex> lock(serial_mutex_);
+                        serial_status_changed_ = false;
+                    }
+                    {
+                        std::lock_guard<std::mutex> lock(serial_mutex_);
+                        serial_is_paused_ = false;
+                    }
+                    while (!serial_status_changed_);
+                }
+                break;
+            case 2:
+                if (!serial_is_paused_) {
+                    {
+                        std::lock_guard<std::mutex> lock(serial_mutex_);
+                        serial_status_changed_ = false;
+                    }
+                    {
+                        std::lock_guard<std::mutex> lock(serial_mutex_);
+                        serial_is_paused_ = true;
+                    }
+                    while (!serial_status_changed_);
+                }
+                break;
+            default:
+                std::cout << "**Please, insert a valid option!" << std::endl;
+                break;
+        }
+    } while (option != 0);
+}
+
+void System::end() {
+    std::cout << "[STATUS]: Closing system..." << std::endl;
+    gk_operator_thread_.join();
+    cb_operator_thread_.join();
+    st_operator_thread_.join();
+    serial_thread_.join();
+    tcp_thread_.join();
 }
 
 void System::setDefaults() {
@@ -121,6 +223,8 @@ void System::setRobots(int which, std::vector<Robot> robots) {
             break;
     }
 }
+
+void System::clearScreen() { std::cout << "\033[2J\033[1;1H"; }
 
 }
 }

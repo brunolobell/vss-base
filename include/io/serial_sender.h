@@ -6,11 +6,12 @@
 
 #include <boost/asio.hpp>
 #include <chrono>
+#include <mutex>
 #include <queue>
 
 
 namespace vss_furgbol {
-namespace serial {
+namespace io {
 
 class SerialSender {
     private:
@@ -31,6 +32,8 @@ class SerialSender {
 
         bool *paused_;
         bool *running_;
+        bool *status_changed_;
+        std::mutex mutex_;
 
         void setConfigurations();
         void printConfigurations();
@@ -41,7 +44,7 @@ class SerialSender {
 
     public:
         SerialSender();
-        SerialSender(bool *running, bool *paused, std::queue<std::vector<uint8_t>> gk_sending_queue, std::queue<std::vector<uint8_t>> cb_sending_queue, std::queue<std::vector<uint8_t>> st_sending_queue);
+        SerialSender(bool *running, bool *paused, bool *status_changed, std::queue<std::vector<uint8_t>> gk_sending_queue, std::queue<std::vector<uint8_t>> cb_sending_queue, std::queue<std::vector<uint8_t>> st_sending_queue);
         ~SerialSender();
 
         void init();
@@ -53,7 +56,7 @@ class SerialSender {
         float getPeriod();
 };
 
-} // namespace serial
+} // namespace io
 } // namespace vss_furgbol
 
 

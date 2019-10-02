@@ -1,6 +1,6 @@
 // ® Copyright FURGBot 2019
 
-#include "serial/serial_sender.h"
+#include "io/serial_sender.h"
 #include "system/robot.h"
 
 #include "json.hpp"
@@ -9,14 +9,13 @@
 #include <iostream>
 
 namespace vss_furgbol {
-namespace serial {
+namespace io {
 
 SerialSender::SerialSender() : io_service_(), port_(io_service_), buffer_(buf_.data()) {}
 
-SerialSender::SerialSender(bool *running, bool *paused, std::queue<std::vector<uint8_t>> gk_sending_queue, std::queue<std::vector<uint8_t>> cb_sending_queue, std::queue<std::vector<uint8_t>> st_sending_queue)
+SerialSender::SerialSender(bool *running, bool *paused, bool *status_changed, std::queue<std::vector<uint8_t>> gk_sending_queue, std::queue<std::vector<uint8_t>> cb_sending_queue, std::queue<std::vector<uint8_t>> st_sending_queue)
     : io_service_(), port_(io_service_), buffer_(buf_.data()), running_(running), paused_(paused),
-    which_queue_(system::GK) 
-{}
+    which_queue_(system::GK), status_changed_(status_changed) {}
 
 SerialSender::~SerialSender() {}
 
@@ -34,25 +33,47 @@ void SerialSender::init() {
 
     if (*running_) printConfigurations();
 
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        *status_changed_ = true;
+    }
+
     exec();
 }
 
 void SerialSender::exec() {
+    bool previous_status;
+
     while (1) {
+        previous_status = true;
         while ((*running_) && (!*paused_)) {
+            if (previous_status != *paused_) {
+                previous_status = *paused_;
+                std::cout << "[STATUS]: System working." << std::endl;
+                *status_changed_ = true;
+            }
             send(which_queue_);
             which_queue_++;
             if (which_queue_ > system::ST) which_queue_ = system::GK;
         }
 
+        if ((*paused_) && (previous_status != *paused_)) {
+            std::cout << "[STATUS]: System paused." << std::endl;
+            *status_changed_ = true;
+        }
+
         if (!*running_) {
             end();
+            *status_changed_ = true;
             break;
         }
     }
 }
 
-void SerialSender::end() { port_.close(); }
+void SerialSender::end() {
+    std::cout << "[STATUS]: Closing serial..." << std::endl;
+    port_.close(); 
+}
 
 void SerialSender::setConfigurations() {
     std::cout << "[STATUS]: Configuring serial..." << std::endl;
@@ -104,5 +125,5 @@ int SerialSender::getFrequency() { return frequency_; }
 
 float SerialSender::getPeriod() { return period_; }
 
-} // namespace serial
+} // namespace io
 } // namespace vss_furgbol
