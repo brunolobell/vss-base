@@ -16,12 +16,16 @@
 namespace vss_furgbol {
 namespace operation {
 
-enum DirectionsLabel {
+enum DirectionsLabels {
     NEGATIVE = 1, POSITIVE = 3
 };
 
-enum OutOfPlaceLabel {
+enum OutOfPlaceLabels {
     NO, BEHIND, AHEAD
+};
+
+enum BufferLabels {
+    ROBOT_ID, LINEAR_VELOCITY, ANGULAR_VELOCITY, LINEAR_DIRECTION, ANGULAR_DIRECTION
 };
 
 class Operation {
@@ -29,27 +33,39 @@ class Operation {
         system::Robot *robot_;
         system::Ball *ball_;
 
-        bool running_;
+        bool *running_;
 
         int max_queue_size_;
+        int velocity_k_;
+
+        int linear_velocity_;
+        int angular_velocity_;
+        int linear_direction_;
+        int angular_direction_;
+
         std::vector<uint8_t> buffer_to_send_;
         std::queue<std::vector<uint8_t>> sending_queue_;
          
     public:
         Operation();
-        Operation(system::Robot *robot, system::Ball *ball, int max_queue_size, geometry::Point2D enemy_goal, geometry::Point2D friendly_goal);
+        Operation(system::Robot *robot, system::Ball *ball);
         ~Operation();
 
-        void turnOn();
-        void turnOff();
-        void init();
+        void setConfigurations();
+        void printConfigurations();
 
+        void init();
+        void exec();
+        void end();
+
+        void verifyPosition();
         void setTarget();
         void setMotion();
-        void watchPosition();
-        void getBack();
 
-        void mountBuffer();
+        void serialize();
+
+        //Getter
+        std::queue<std::vector<uint8_t>>* getSendingQueueReference();
 };
 
 } // namespace operation

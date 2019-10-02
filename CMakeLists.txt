@@ -14,8 +14,11 @@ set(SRCS
     "src/geometry/field_line.cc"
     "src/geometry/point_2d.cc"
     "src/geometry/vector_2d.cc"
-    "src/serial/serial_message.cc"
-    "src/serial/serial_sender.cc")
+    "src/operation/operation.cc"
+    "src/serial/serial_sender.cc"
+    "src/system/ball.cc"
+    "src/system/robot.cc"
+    "src/system/system.cc")
 
 add_library(vss_software_srcs
             ${SRCS})

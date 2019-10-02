@@ -16,20 +16,16 @@ namespace system {
 class Ball {
     private:
         geometry::Point2D position_;
-        std::vector<float> movimentation_;
 
     public:
         Ball();
-        Ball(geometry::Point2D position, std::vector<float> movimentation);
         ~Ball();
 
         //Getters
         geometry::Point2D getPosition();
-        std::vector<float> getMovimentation();
 
         //Setters
         void setPosition(geometry::Point2D position);
-        void setMovimentation(std::vector<float> movimentation);
 
         //Operators
         void operator=(Ball ball);

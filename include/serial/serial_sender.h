@@ -4,8 +4,6 @@
 #define SERIAL_SENDER_H
 
 
-#include "serial/serial_message.h"
-
 #include <boost/asio.hpp>
 #include <chrono>
 #include <queue>
@@ -31,7 +29,7 @@ class SerialSender {
         std::queue<std::vector<uint8_t>> *st_sending_queue_;
         int which_queue_;
 
-        bool paused_;
+        bool *paused_;
         bool *running_;
 
     public:

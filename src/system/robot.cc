@@ -9,18 +9,6 @@ namespace system {
 
 Robot::Robot() {}
 
-Robot::Robot(int id, int role, int max_velocity, float max_ball_distance, float yaw, geometry::FieldSection field_section, geometry::Point2D position, geometry::Point2D target, std::vector<float> movimentation) {
-    id_ = id;
-    role_ = role;
-    max_velocity_ = max_velocity;
-    max_ball_distance_ = max_ball_distance;
-    yaw_ = yaw;
-    field_section_ = field_section;
-    position_ = position;
-    target = target_;
-    movimentation_ = movimentation;
-}
-
 Robot::~Robot() {}
 
 int Robot::getId() { return id_; }
@@ -31,15 +19,17 @@ int Robot::getMaxVelocity() { return max_velocity_; }
 
 float Robot::getMaxBallDistance() { return max_ball_distance_; }
 
-float Robot::getYaw() { return yaw_; }
+float Robot::getAngle() { return angle_; }
 
-geometry::FieldSection Robot::getFieldSecton() { return field_section_; }
+float Robot::getTargetAngle() { return target_angle_; }
+
+geometry::FieldLine Robot::getFieldLine() { return field_line_; }
 
 geometry::Point2D Robot::getPosition() { return position_; }
 
-geometry::Point2D Robot::getTarget() { return target_; }
+geometry::Point2D Robot::getTargetPosition() { return target_position_; }
 
-std::vector<float> Robot::getMovimentation() { return movimentation_; }
+int Robot::isOutOfPlace() { return out_of_place_; }
 
 void Robot::setId(int id) { id_ = id; }
 
@@ -49,26 +39,29 @@ void Robot::setMaxVelocity(int max_velocity) { max_velocity_ = max_velocity; }
 
 void Robot::setMaxBallDistance(float max_ball_distance) { max_ball_distance_ = max_ball_distance; }
 
-void Robot::setYaw(float yaw) { yaw_ = yaw; }
+void Robot::setAngle(float angle) { angle_ = angle; }
 
-void Robot::setFieldSection(geometry::FieldSection field_section) { field_section_ = field_section; }
+void Robot::setTargetAngle(float target_angle) { target_angle_ = target_angle; }
+
+void Robot::setFieldLine(geometry::FieldLine field_line) { field_line_ = field_line; }
 
 void Robot::setPosition(geometry::Point2D position) { position_ = position; }
 
-void Robot::setTarget(geometry::Point2D target) { target_ = target; }
+void Robot::setTargetPosition(geometry::Point2D target_position) { target_position_ = target_position; }
 
-void Robot::setMovimentation(std::vector<float> movimentation) { movimentation_ = movimentation; }
+void Robot::setOutOfPlace(int out_of_place) { out_of_place_ = out_of_place; }
 
 void Robot::operator=(Robot robot) {
     id_ = robot.id_;
     role_ = robot.role_; 
     max_velocity_ = robot.max_velocity_;
     max_ball_distance_ = robot.max_ball_distance_;
-    yaw_ = robot.yaw_;
-    field_section_ = robot.field_section_;
+    angle_ = robot.angle_;
+    target_angle_ = robot.target_angle_;
+    field_line_ = robot.field_line_;
     position_ = robot.position_;
-    target_ = robot.target_;
-    movimentation_ = robot.movimentation_;
+    target_position_ = robot.target_position_;
+    out_of_place_ = robot.out_of_place_;
 }
 
 } // namespace system

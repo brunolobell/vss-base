@@ -7,10 +7,9 @@
                 "max_ball_distance": 6
             },
 
-            "field_section": {
-                "min_x": 10.5,
+            "field_line": {
+                "x": 10.5,
                 "min_y": 30.5,
-                "max_x": 10.5,
                 "max_y": 50.5
             }
         },
@@ -22,10 +21,9 @@
                 "max_ball_distance": 6
             },
 
-            "field_section": {
-                "min_x": 40.5,
+            "field_line": {
+                "x": 40.5,
                 "min_y": 5.5,
-                "max_x": 50.5,
                 "max_y": 145.5
             }
         },
@@ -37,24 +35,11 @@
                 "max_ball_distance": 6
             },
 
-            "field_section": {
-                "min_x": 100.5,
+            "field_line": {
+                "x": 100.5,
                 "min_y": 5.5,
-                "max_x": 200.5,
                 "max_y": 145.5
             }
-        }
-    },
-
-    "goals": {
-        "enemy": {
-            "center": 10.5,
-            "x_position": 200.5
-        },
-
-        "friendly": {
-            "center": 10.5,
-            "x_position": 0
         }
     }
 }

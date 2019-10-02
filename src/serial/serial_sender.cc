@@ -6,6 +6,7 @@
 #include "json.hpp"
 
 #include <fstream>
+#include <iostream>
 
 namespace vss_furgbol {
 namespace serial {
@@ -32,7 +33,7 @@ void SerialSender::init() {
     exec();
 }
 
-void exec() {
+void SerialSender::exec() {
     while (1) {
         while ((*running_) && (!*paused_)) {
             send(which_queue_);
@@ -50,7 +51,7 @@ void exec() {
 void SerialSender::end() { port_.close(); }
 
 void SerialSender::setConfigurations() {
-    std::cout << std::endl << std::endl << "[STATUS]: Configuring serial..." << std::endl;
+    std::cout << "[STATUS]: Configuring serial..." << std::endl;
     std::ifstream _ifstream("config/serial.json");
     nlohmann::json json_file;
     _ifstream >> json_file;
@@ -88,8 +89,6 @@ void SerialSender::send(int which_queue) {
 }
 
 std::string SerialSender::getPortName() { return port_name_; }
-
-int SerialSender::getPackageId() { return package_id_; }
 
 int SerialSender::getFrequency() { return frequency_; }
 
