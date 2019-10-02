@@ -14,6 +14,15 @@ System::~System() {}
 void System::init() {
     setDefaults();
     printDefaults();
+
+    gk_operator_ = new operation::Operation(&friendly_robots_[GK], &ball_);
+    cb_operator_ = new operation::Operation(&friendly_robots_[CB], &ball_);
+    st_operator_ = new operation::Operation(&friendly_robots_[ST], &ball_);
+
+    serial_is_running_ = true;
+    serial_is_paused_ = false;
+    serial_sender_ = new serial::SerialSender(&serial_is_running_, &serial_is_paused_, gk_operator_->getSendingQueue(), cb_operator_->getSendingQueue(), st_operator_->getSendingQueue());
+    serial_sender_->init();
 }
 
 void System::setDefaults() {

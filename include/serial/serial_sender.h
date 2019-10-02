@@ -24,25 +24,27 @@ class SerialSender {
         float period_;
         std::chrono::duration<float> sending_frequency_;
 
-        std::queue<std::vector<uint8_t>> *gk_sending_queue_;
-        std::queue<std::vector<uint8_t>> *cb_sending_queue_;
-        std::queue<std::vector<uint8_t>> *st_sending_queue_;
+        std::queue<std::vector<uint8_t>> gk_sending_queue_;
+        std::queue<std::vector<uint8_t>> cb_sending_queue_;
+        std::queue<std::vector<uint8_t>> st_sending_queue_;
         int which_queue_;
 
         bool *paused_;
         bool *running_;
 
-    public:
-        SerialSender(bool *running);
-        ~SerialSender();
-
         void setConfigurations();
         void printConfigurations();
-        void init();
+        
         void exec();
         void end();
-
         void send(int which_queue);
+
+    public:
+        SerialSender();
+        SerialSender(bool *running, bool *paused, std::queue<std::vector<uint8_t>> gk_sending_queue, std::queue<std::vector<uint8_t>> cb_sending_queue, std::queue<std::vector<uint8_t>> st_sending_queue);
+        ~SerialSender();
+
+        void init();
 
         //Getters
         std::string getPortName();

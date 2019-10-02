@@ -47,6 +47,7 @@ class Operation {
         std::queue<std::vector<uint8_t>> sending_queue_;
          
     public:
+
         Operation();
         Operation(system::Robot *robot, system::Ball *ball);
         ~Operation();
@@ -64,8 +65,8 @@ class Operation {
 
         void serialize();
 
-        //Getter
-        std::queue<std::vector<uint8_t>>* getSendingQueueReference();
+        //Getters
+        std::queue<std::vector<uint8_t>> getSendingQueue();
 };
 
 } // namespace operation

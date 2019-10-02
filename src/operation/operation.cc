@@ -14,9 +14,10 @@
 namespace vss_furgbol {
 namespace operation {
 
-Operation::Operation() {}
+Operation::Operation() : sending_queue_() {}
 
-Operation::Operation(system::Robot *robot, system::Ball *ball) : robot_(robot), ball_(ball) {}
+Operation::Operation(system::Robot *robot, system::Ball *ball) : robot_(robot), ball_(ball),
+    sending_queue_() {}
 
 Operation::~Operation() {}
 
@@ -171,7 +172,7 @@ void Operation::serialize() {
     sending_queue_.push(buffer_to_send_);
 }
 
-std::queue<std::vector<uint8_t>>* Operation::getSendingQueueReference() { return &sending_queue_; }
+std::queue<std::vector<uint8_t>> Operation::getSendingQueue() { return sending_queue_; }
 
 } // namespace operation
 } // namespace vss_furgbol

@@ -36,19 +36,26 @@ class System {
 
         //Serial
         serial::SerialSender *serial_sender_;
+        bool serial_is_running_;
+        bool serial_is_paused_;
 
         //Operation
-        operation::Operation gk_operator;
-        operation::Operation cb_operator;
-        operation::Operation st_operator;
+        operation::Operation *gk_operator_;
+        operation::Operation *cb_operator_;
+        operation::Operation *st_operator_;
+
+        //Perception
+        //perception::Watcher watcher_;
+        //perception::Dealer plotter_;
+
+        void setDefaults();
+        void printDefaults();
 
     public:
         System();
         ~System();
 
         void init();
-        void setDefaults();
-        void printDefaults();
 
         //Getters
         Ball getBall();

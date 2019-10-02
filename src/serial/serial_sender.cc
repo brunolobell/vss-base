@@ -11,8 +11,12 @@
 namespace vss_furgbol {
 namespace serial {
 
-SerialSender::SerialSender(bool *running) : io_service_(), port_(io_service_), buffer_(buf_.data()), running_(running),
-    which_queue_(system::GK) {}
+SerialSender::SerialSender() : io_service_(), port_(io_service_), buffer_(buf_.data()) {}
+
+SerialSender::SerialSender(bool *running, bool *paused, std::queue<std::vector<uint8_t>> gk_sending_queue, std::queue<std::vector<uint8_t>> cb_sending_queue, std::queue<std::vector<uint8_t>> st_sending_queue)
+    : io_service_(), port_(io_service_), buffer_(buf_.data()), running_(running), paused_(paused),
+    which_queue_(system::GK) 
+{}
 
 SerialSender::~SerialSender() {}
 
@@ -74,16 +78,22 @@ void SerialSender::printConfigurations() {
 void SerialSender::send(int which_queue) {
     switch (which_queue) {
         case system::GK:
-            port_.write_some(boost::asio::buffer(gk_sending_queue_->front(), gk_sending_queue_->front().size()));
-            gk_sending_queue_->pop();
+            if (!gk_sending_queue_.empty()) {
+                port_.write_some(boost::asio::buffer(gk_sending_queue_.front(), gk_sending_queue_.front().size()));
+                gk_sending_queue_.pop();
+            }
             break;
         case system::CB:
-            port_.write_some(boost::asio::buffer(cb_sending_queue_->front(), cb_sending_queue_->front().size()));
-            cb_sending_queue_->pop();
+            if (!cb_sending_queue_.empty()) {
+                port_.write_some(boost::asio::buffer(cb_sending_queue_.front(), cb_sending_queue_.front().size()));
+                cb_sending_queue_.pop();
+            }
             break;
         case system::ST:
-            port_.write_some(boost::asio::buffer(st_sending_queue_->front(), st_sending_queue_->front().size()));
-            st_sending_queue_->pop();
+            if (!st_sending_queue_.empty()) {
+                port_.write_some(boost::asio::buffer(st_sending_queue_.front(), st_sending_queue_.front().size()));
+                st_sending_queue_.pop();
+            }
             break;
     }
 }
