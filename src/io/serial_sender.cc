@@ -8,7 +8,7 @@
 #include <fstream>
 #include <iostream>
 
-namespace vss_furgbol {
+namespace vss {
 namespace io {
 
 SerialSender::SerialSender() : io_service_(), port_(io_service_), buffer_(buf_.data()) {}
@@ -126,4 +126,4 @@ int SerialSender::getFrequency() { return frequency_; }
 float SerialSender::getPeriod() { return period_; }
 
 } // namespace io
-} // namespace vss_furgbol
+} // namespace vss

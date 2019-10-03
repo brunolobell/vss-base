@@ -6,7 +6,7 @@
 #include <math.h>
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace geometry {
 
 Vector2D::Vector2D() {}

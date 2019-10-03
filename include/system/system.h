@@ -9,9 +9,9 @@
 #include "io/serial_sender.h"
 #include "io/tcp_receiver.h"
 #include "operation/operation.h"
-#include "system/ball.h"
-#include "system/robot.h"
 
+#include "Domain/Ball.h"
+#include "Domain/Robot.h"
 #include "json.hpp"
 
 #include <cinttypes>
@@ -23,19 +23,24 @@
 #include <thread>
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace system {
 
 enum TeamLabels {
     ENEMY, FRIENDLY
 };
 
+enum TeamColorLabels {
+    BLUE, YELLOW
+};
+
 class System {
     private:
         //World Model
         Ball ball_;
-        std::vector<Robot> friendly_robots_;
+        std::vector<vss::Robot> friendly_robots_;
         std::vector<Robot> enemy_robots_;
+        int team_color_;
 
         //Serial
         io::SerialSender *serial_sender_;
@@ -90,10 +95,12 @@ class System {
         //Getters
         Ball getBall();
         std::vector<Robot> getRobots(int which);
+        int getTeamColor();
 
         //Setters
         void setBall(Ball ball);
         void setRobots(int which, std::vector<Robot> robots);
+        void setTeamColor(int tam_color);
 };
 
 }

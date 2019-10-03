@@ -6,25 +6,27 @@
 #include <iostream>
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace io {
 
 TCPReceiver::TCPReceiver() {}
 
-TCPReceiver::TCPReceiver(std::vector<system::Robot> friendly_robots, std::vector<system::Robot> enemy_robots, system::Ball *ball, bool *running, bool *status_changed) : 
-    ball_(ball), friendly_robots_(friendly_robots), enemy_robots_(enemy_robots), running_(running), status_changed_(status_changed) {}
+TCPReceiver::TCPReceiver(system::System *system, bool *running, bool *status_changed) : 
+    system_(system), running_(running), status_changed_(status_changed) {}
 
 TCPReceiver::~TCPReceiver() {}
 
 void TCPReceiver::init() {
     setConfigurations();
     printConfigurations();
+
+    state_receiver_ = new vss::StateReceiver();
+
     {
         std::lock_guard<std::mutex> lock(mutex_);
         *status_changed_ = true;
     }
-
-    state_receiver_ = new vss::StateReceiver();
+    
     exec();
 
     {
@@ -39,7 +41,10 @@ void TCPReceiver::init() {
 }
 
 void TCPReceiver::exec() {
-    while (*running_) state_ = state_receiver_->receiveState(vss::FieldTransformationType::None);
+    while (*running_) {
+        state_ = state_receiver_->receiveState(vss::FieldTransformationType::None);
+        system_->setBall(state_.ball);
+    }
 }
 
 void TCPReceiver::end() { std::cout << "[STATUS]: Closing TCP..." << std::endl; }

@@ -6,7 +6,7 @@
 #include <chrono>
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace system {
 
 System::System() {}
@@ -45,10 +45,11 @@ void System::init() {
     serial_sender_ = new io::SerialSender(&serial_is_running_, &serial_is_paused_, &serial_status_changed_, gk_operator_->getSendingQueue(), cb_operator_->getSendingQueue(), st_operator_->getSendingQueue());
     serial_thread_ = std::thread(&io::SerialSender::init, serial_sender_);
     while (!serial_status_changed_);
+    if (!serial_is_running_) serial_thread_.join();
 
     tcp_is_running_ = true;
     tcp_status_changed_ = false;
-    tcp_receiver_ = new io::TCPReceiver(friendly_robots_, enemy_robots_, &ball_, &tcp_is_running_, &tcp_status_changed_);
+    tcp_receiver_ = new io::TCPReceiver(this, &tcp_is_running_, &tcp_status_changed_);
     tcp_thread_ = std::thread(&io::TCPReceiver::init, tcp_receiver_);
     while (!tcp_status_changed_);
 
@@ -74,19 +75,74 @@ void System::exec() {
 
         switch (option) {
             case 0:
+                if (serial_is_running_) {
+                    {
+                        std::lock_guard<std::mutex> lock(serial_mutex_);
+                        serial_status_changed_ = false;
+                    }
+                    {
+                        std::lock_guard<std::mutex> lock(serial_mutex_);
+                        serial_is_running_ = false;
+                    }
+                    while (!serial_status_changed_);
+                    serial_thread_.join();
+                }
                 {
-                    std::lock_guard<std::mutex> lock(serial_mutex_);
-                    serial_status_changed_ = false;
+                    std::lock_guard<std::mutex> lock(gk_operator_mutex_);
+                    gk_operator_status_changed_ = false;
+                }
+                {
+                    std::lock_guard<std::mutex> lock(gk_operator_mutex_);
+                    gk_operator_is_running_ = false;
+                }
+                while (!gk_operator_status_changed_);
+                {
+                    std::lock_guard<std::mutex> lock(cb_operator_mutex_);
+                    cb_operator_status_changed_ = false;
+                }
+                {
+                    std::lock_guard<std::mutex> lock(cb_operator_mutex_);
+                    cb_operator_is_running_ = false;
+                }
+                while (!cb_operator_status_changed_);
+                {
+                    std::lock_guard<std::mutex> lock(st_operator_mutex_);
+                    st_operator_status_changed_ = false;
+                }
+                {
+                    std::lock_guard<std::mutex> lock(st_operator_mutex_);
+                    st_operator_is_running_ = false;
+                }
+                while (!st_operator_status_changed_);
+                {
+                    std::lock_guard<std::mutex> lock(tcp_mutex_);
+                    tcp_status_changed_ = false;
                 }
                 {
                     std::lock_guard<std::mutex> lock(serial_mutex_);
-                    serial_is_running_ = false;
+                    tcp_is_running_ = false;
                 }
-                while (!serial_status_changed_);
+                while (!tcp_status_changed_);
                 end();
                 break;
             case 1:
-                if (serial_is_paused_) {
+                if (!serial_is_running_) {
+                    {
+                        std::lock_guard<std::mutex> lock(serial_mutex_);
+                        serial_is_running_ = true;
+                    }
+                    {
+                        std::lock_guard<std::mutex> lock(serial_mutex_);
+                        serial_is_paused_ = false;
+                    }
+                    {
+                        std::lock_guard<std::mutex> lock(serial_mutex_);
+                        serial_status_changed_ = false;
+                    }
+                    serial_thread_ = std::thread(&io::SerialSender::init, serial_sender_);
+                    while (!serial_status_changed_);
+                    if (!serial_is_running_) serial_thread_.join();
+                } else if (serial_is_paused_) {
                     {
                         std::lock_guard<std::mutex> lock(serial_mutex_);
                         serial_status_changed_ = false;
@@ -123,7 +179,6 @@ void System::end() {
     gk_operator_thread_.join();
     cb_operator_thread_.join();
     st_operator_thread_.join();
-    serial_thread_.join();
     tcp_thread_.join();
 }
 
@@ -135,6 +190,9 @@ void System::setDefaults() {
 
     Robot goalkeeper, centerback, striker;
     geometry::FieldLine gk_field_line, cb_field_line, st_field_line;
+
+    if (json_file["team_color"] == "blue") team_color_ = BLUE;
+    if (json_file["team_color"] == "yellow") team_color_ = YELLOW;
 
     gk_field_line.setX(json_file["robots"]["goalkeeper"]["field_line"]["x"]);
     gk_field_line.setMinY(json_file["robots"]["goalkeeper"]["field_line"]["min_y"]);
@@ -169,6 +227,11 @@ void System::printDefaults() {
     std::cout << "[STATUS]: Defaults setted!" << std::endl;
 
     std::cout << "-> Defaults:" << std::endl;
+
+    std::cout << "**Team color: ";
+    if (team_color_ == BLUE) std::cout << "blue";
+    if (team_color_ == YELLOW) std::cout << "yellow";
+    std::cout << std::endl;
 
     std::cout << "**Robots:" << std::endl;
 
@@ -211,6 +274,8 @@ std::vector<Robot> System::getRobots(int which) {
     }
 }
 
+int System::getTeamColor() { return team_color_; }
+
 void System::setBall(Ball ball) { ball_ = ball; }
 
 void System::setRobots(int which, std::vector<Robot> robots) {
@@ -223,6 +288,8 @@ void System::setRobots(int which, std::vector<Robot> robots) {
             break;
     }
 }
+
+void System::setTeamColor(int team_color) { team_color_ = team_color; }
 
 void System::clearScreen() { std::cout << "\033[2J\033[1;1H"; }
 

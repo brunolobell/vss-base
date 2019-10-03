@@ -1,4 +1,6 @@
 {
+    "team_color": "blue",
+    
     "robots": {
         "goalkeeper": {
             "general_settings": {

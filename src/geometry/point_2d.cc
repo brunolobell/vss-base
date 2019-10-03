@@ -4,7 +4,7 @@
 #include "geometry/point_2d.h"
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace geometry {
 
 Point2D::Point2D() {}

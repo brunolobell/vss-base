@@ -4,7 +4,7 @@
 #include "geometry/field_line.h"
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace geometry {
 
 FieldLine::FieldLine() {}
@@ -36,4 +36,4 @@ void FieldLine::operator=(FieldLine field) {
 }
 
 } // geometry
-} // vss_furgbol
+} // vss

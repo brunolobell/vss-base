@@ -11,7 +11,7 @@
 #include <iostream>
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace operation {
 
 Operation::Operation() : sending_queue_() {}
@@ -191,4 +191,4 @@ void Operation::serialize() {
 std::queue<std::vector<uint8_t>> Operation::getSendingQueue() { return sending_queue_; }
 
 } // namespace operation
-} // namespace vss_furgbol
+} // namespace vss

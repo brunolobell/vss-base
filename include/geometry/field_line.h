@@ -5,7 +5,7 @@
 #define FIELD_LINE_H
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace geometry {
 
 class FieldLine {
@@ -34,7 +34,7 @@ class FieldLine {
 };
 
 } // namespace geometry
-} // namespace vss_furgbol
+} // namespace vss
 
 
 #endif // FIELD_LINE_H

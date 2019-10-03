@@ -14,7 +14,7 @@
 #include <queue>
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace operation {
 
 enum DirectionsLabels {
@@ -72,7 +72,7 @@ class Operation {
 };
 
 } // namespace operation
-} // namespace vss_furgbol
+} // namespace vss
 
 
 #endif // OPERATION_H

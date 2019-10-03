@@ -5,7 +5,7 @@
 #define POINT_2D_H
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace geometry {
 
 class Point2D {

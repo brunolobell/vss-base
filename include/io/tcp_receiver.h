@@ -5,14 +5,13 @@
 #define TCP_RECEIVER_H
 
 
-#include "system/ball.h"
-#include "system/robot.h"
+#include "system/system.h"
 
 #include <Communications/StateReceiver.h>
 #include <mutex>
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace io {
 
 class TCPReceiver {
@@ -20,9 +19,7 @@ class TCPReceiver {
         vss::State state_;
         vss::IStateReceiver *state_receiver_;
 
-        system::Ball *ball_;
-        std::vector<system::Robot> friendly_robots_;
-        std::vector<system::Robot> enemy_robots_;
+        system::System *system_;
 
         bool *running_;
         bool *status_changed_;
@@ -36,14 +33,14 @@ class TCPReceiver {
 
     public:
         TCPReceiver();
-        TCPReceiver(std::vector<system::Robot> friendly_robots, std::vector<system::Robot> enemy_robots, system::Ball *ball, bool *running, bool *status_changed);
+        TCPReceiver(system::System *system, bool *running, bool *status_changed);
         ~TCPReceiver();
 
         void init();
 };
 
 } // namespace io
-} // namespace vss_furgbol
+} // namespace vss
 
 
 #endif // TCP_RECEIVER_H

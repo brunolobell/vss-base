@@ -8,7 +8,7 @@
 #include "geometry/point_2d.h"
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace geometry {
 
 class Vector2D {
@@ -37,7 +37,7 @@ class Vector2D {
 };
 
 } // namespace geometry
-} // namespace vss_furgbol
+} // namespace vss
 
 
 #endif // VECTOR_2D_H

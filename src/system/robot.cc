@@ -4,10 +4,16 @@
 #include "system/robot.h"
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace system {
 
 Robot::Robot() {}
+
+Robot::Robot(vss::Robot robot) {
+    position_.setX(robot.x);
+    position_.setY(robot.y);
+    angle_ = robot.angle;
+}
 
 Robot::~Robot() {}
 
@@ -64,5 +70,11 @@ void Robot::operator=(Robot robot) {
     out_of_place_ = robot.out_of_place_;
 }
 
+void Robot::operator=(vss::Robot robot) {
+    position_.setX(robot.x);
+    position_.setY(robot.y);
+    angle_ = robot.angle;
+}
+
 } // namespace system
-} // namespace vss_furgbol
+} // namespace vss

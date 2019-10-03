@@ -10,7 +10,7 @@
 #include <queue>
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace io {
 
 class SerialSender {
@@ -57,7 +57,7 @@ class SerialSender {
 };
 
 } // namespace io
-} // namespace vss_furgbol
+} // namespace vss
 
 
 #endif
