@@ -1,0 +1,4 @@
+{
+    "max_queue_size": 10,
+    "velocity_gain": 30
+}

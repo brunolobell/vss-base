@@ -5,6 +5,6 @@
 
 
 int main() {
-    vss_furgbol::system::System system;
+    vss::system::System system;
     system.init();
 }

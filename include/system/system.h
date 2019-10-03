@@ -5,69 +5,102 @@
 #define SYSTEM_H
 
 
-#include "system/ball.h"
-#include "system/robot.h"
+#include "geometry/point_2d.h"
 #include "io/serial_sender.h"
-#include "io/serial_message.h"
+#include "io/tcp_receiver.h"
+#include "operation/operation.h"
 
+#include "Domain/Ball.h"
+#include "Domain/Robot.h"
 #include "json.hpp"
 
-#include <chrono>
-#include <string>
+#include <cinttypes>
 #include <fstream>
 #include <iostream>
+#include <mutex>
+#include <queue>
+#include <string>
+#include <thread>
 
 
-namespace vss_furgbol {
+namespace vss {
 namespace system {
 
 enum TeamLabels {
     ENEMY, FRIENDLY
 };
 
+enum TeamColorLabels {
+    BLUE, YELLOW
+};
+
 class System {
     private:
+        //World Model
         Ball ball_;
-        std::vector<Robot> friendly_robots_;
+        std::vector<vss::Robot> friendly_robots_;
         std::vector<Robot> enemy_robots_;
+        int team_color_;
 
-        //io::TCPReceiver tcp_receiver_;
-
-        int serial_package_id_;
-        std::chrono::duration<float> serial_sending_frequency_;
+        //Serial
         io::SerialSender *serial_sender_;
-        io::SerialMessage serial_message_;
-        std::vector<uint8_t> buffer_to_send_;
+        bool serial_is_running_;
+        bool serial_is_paused_;
+        bool serial_status_changed_;
+        std::thread serial_thread_;
+        std::mutex serial_mutex_;
 
-        std::string serial_port_name_;
-        int frequency_;
-        float period_;
+        //TCP
+        io::TCPReceiver *tcp_receiver_;
+        bool tcp_is_running_;
+        bool tcp_status_changed_;
+        std::thread tcp_thread_;
+        std::mutex tcp_mutex_;
+
+        //Goalkeeper Operator
+        operation::Operation *gk_operator_;
+        bool gk_operator_is_running_;
+        bool gk_operator_status_changed_;
+        std::thread gk_operator_thread_;
+        std::mutex gk_operator_mutex_;
+
+        //Centerback Operator
+        operation::Operation *cb_operator_;
+        bool cb_operator_is_running_;
+        bool cb_operator_status_changed_;
+        std::thread cb_operator_thread_;
+        std::mutex cb_operator_mutex_;
+
+        //Striker Operator
+        operation::Operation *st_operator_;
+        bool st_operator_is_running_;
+        bool st_operator_status_changed_;
+        std::thread st_operator_thread_;
+        std::mutex st_operator_mutex_;
+
+        void setDefaults();
+        void printDefaults();
+
+        void exec();
+        void end();
+
+        void clearScreen();
 
     public:
         System();
         ~System();
 
         void init();
-        void setConfigurations();
-        void setDefaults();
-
-        void printConfigurations();
-        void printDefaults();
 
         //Getters
         Ball getBall();
         std::vector<Robot> getRobots(int which);
-        int getSerialPackageId();
-        std::chrono::duration<float> getSerialSendingFrequency();
-        io::SerialSender* getSerialSender();
-        io::SerialMessage getSerialMessage();
-        std::vector<uint8_t> getBuffer();
+        int getTeamColor();
 
         //Setters
         void setBall(Ball ball);
         void setRobots(int which, std::vector<Robot> robots);
-        void setSerialSender(std::string serial_port_name);
-        void setSerialSendingFrequency(int frequency);
+        void setTeamColor(int tam_color);
 };
 
 }
